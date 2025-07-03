@@ -1,0 +1,12 @@
+name: Keep Render Server Alive
+
+on:
+  schedule:
+    - cron: '*/25 * * * *' # every 25 minutes
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl Render Server
+        run: curl -s https://zi-affiliates-backend.onrender.com/
