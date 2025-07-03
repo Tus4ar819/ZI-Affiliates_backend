@@ -2,6 +2,9 @@ const { ObjectId } = require('mongodb');
 const crypto = require('crypto');
 
 class LeadModel {
+  async getLeadsByEmployeeId(employeeId) {
+    return this.collection.find({ employeeId }).toArray();
+  }
   constructor(db) {
     if (!db) {
       throw new Error('MongoDB connection not established');
