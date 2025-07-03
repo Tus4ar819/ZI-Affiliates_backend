@@ -7,8 +7,6 @@ const jwt = require('@fastify/jwt');
 const mongodb = require('@fastify/mongodb');
 require('dotenv').config();
 
-fastify.register(cors, { origin: true });
-
 fastify.register(mongodb, {
   forceClose: true,
   url: 'mongodb+srv://admin:admin@ziaffiliatebackend.zjspneb.mongodb.net/zi-affiliates',
