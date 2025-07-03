@@ -1,3 +1,10 @@
+  // Get all leads by employeeId
+  fastify.get('/by-employee/:empId', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    const { empId } = request.params;
+    if (!empId) return reply.code(400).send({ error: 'empId param required' });
+    const leadsList = await leads.getLeadsByEmployeeId(empId);
+    reply.send(leadsList);
+  });
 const LeadModel = require('../models/lead');
 
 async function leadRoutes(fastify, opts) {
@@ -16,7 +23,8 @@ async function leadRoutes(fastify, opts) {
         status: { type: 'string', enum: ['hot', 'warm', 'cold'] },
         notes: { type: 'string' },
         date: { type: 'string', format: 'date' },
-        employeeId: { type: 'string' } // new field for employee id
+        employeeId: { type: 'string' }, // new field for employee id
+        pin: { type: 'boolean' } // new field for pin
       }
     }
   }}, async (request, reply) => {

@@ -54,8 +54,33 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"John Doe\",\n  \"phone\": \"+91-9876543210\",\n  \"email\": \"john.doe@example.com\",\n  \"status\": \"hot\",\n  \"notes\": \"Interested in premium package\",\n  \"date\": \"2025-06-23\"\n}"
-        },
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"phone\": \"+91-9876543210\",\n  \"email\": \"john.doe@example.com\",\n  \"status\": \"hot\",\n  \"notes\": \"Interested in premium package\",\n  \"date\": \"2025-06-23\",\n  \"pin\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "Get Leads by EmployeeId",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt}}" }
+        ],
+        "url": {
+          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads/by-employee/{{employeeId}}",
+          "protocol": "https",
+          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "path": ["leads", "by-employee", "{{employeeId}}"]
+        }
+      }
+    },
+    {
+      "name": "Get All Leads",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt}}" },
+          { "key": "employee-id", "value": "{{employeeId}}" }
+        ],
         "url": {
           "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads",
           "protocol": "https",
