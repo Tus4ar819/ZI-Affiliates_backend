@@ -1,3 +1,10 @@
+
+const LeadModel = require('../models/lead');
+
+async function leadRoutes(fastify, opts) {
+  const db = fastify.mongo.db;
+  const leads = new LeadModel(db);
+
   // Get all leads by employeeId
   fastify.get('/by-employee/:empId', { preHandler: [fastify.authenticate] }, async (request, reply) => {
     const { empId } = request.params;
@@ -5,11 +12,6 @@
     const leadsList = await leads.getLeadsByEmployeeId(empId);
     reply.send(leadsList);
   });
-const LeadModel = require('../models/lead');
-
-async function leadRoutes(fastify, opts) {
-  const db = fastify.mongo.db;
-  const leads = new LeadModel(db);
 
   // Create Lead
   fastify.post('/', { preHandler: [fastify.authenticate], schema: {
