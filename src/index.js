@@ -7,7 +7,12 @@ const jwt = require('@fastify/jwt');
 const mongodb = require('@fastify/mongodb');
 require('dotenv').config();
 
-fastify.register(cors, { origin: true });
+fastify.register(cors, {
+  origin: [
+    "https://symmetrical-goldfish-pj9rj5x5rxx6h6q4x-8081.app.github.dev/"
+  ],
+  methods: ["POST", "DELETE", "GET"]
+});
 
 fastify.register(mongodb, {
   forceClose: true,
