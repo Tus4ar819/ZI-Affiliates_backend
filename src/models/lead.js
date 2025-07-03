@@ -1,23 +1,3 @@
-class LeadModel {
-  constructor(db) {
-    if (!db) {
-      throw new Error('MongoDB connection not established');
-    }
-    // Create collection if it doesn't exist
-    db.listCollections({ name: 'leads' }).next((err, collinfo) => {
-      if (!collinfo) {
-        db.createCollection('leads');
-      }
-    });
-    this.collection = db.collection('leads');
-  }
-
-
-  async getLeadsByEmployeeId(employeeId) {
-    return this.collection.find({ employeeId }).toArray();
-  }
-}
-
 const { ObjectId } = require('mongodb');
 const crypto = require('crypto');
 
