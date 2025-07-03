@@ -1,10 +1,13 @@
 const fastify = require('fastify')({ logger: true });
+const cors = require('@fastify/cors');
 const userRoutes = require('./routes/user');
 const leadRoutes = require('./routes/lead');
 const dashboardRoutes = require('./routes/dashboard');
 const jwt = require('@fastify/jwt');
 const mongodb = require('@fastify/mongodb');
 require('dotenv').config();
+
+fastify.register(cors, { origin: true });
 
 fastify.register(mongodb, {
   forceClose: true,
