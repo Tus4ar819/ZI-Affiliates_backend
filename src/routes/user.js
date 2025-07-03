@@ -45,7 +45,11 @@ async function userRoutes(fastify, opts) {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return reply.code(401).send({ error: 'Password is incorrect' });
     const token = fastify.jwt.sign({ userId: user._id });
-    reply.send({ token, expiresIn: 259200 });
+    reply.send({
+      token,
+      expiresIn: 259200,
+      empId: user.empId
+    });
   });
 }
 
