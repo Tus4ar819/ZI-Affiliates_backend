@@ -6,20 +6,51 @@
   },
   "item": [
     {
+      "name": "Create Admin",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "email", "value": "admin@example.com", "type": "text" },
+            { "key": "password", "value": "AdminPass123", "type": "text" },
+            { "key": "name", "value": "Admin User", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/create-admin",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "create-admin"]
+        }
+      }
+    },
+    {
       "name": "User Signup",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          { "key": "Content-Type", "value": "application/json" },          
+          { "key": "Authorization", "value": "Bearer {{jwt}}" }
         ],
         "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"TestPass123\",\n  \"name\": \"Test User\"\n}"
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "email", "value": "testuser@example.com", "type": "text" },
+            { "key": "password", "value": "TestPass123", "type": "text" },
+            { "key": "name", "value": "Test User", "type": "text" },
+            { "key": "role", "value": "user", "type": "text" }
+          ]
         },
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/user/signup",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/user/signup",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["user", "signup"]
         }
       }
@@ -29,16 +60,20 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          { "key": "Authorization", "value": "Bearer {{jwt}}" }
         ],
         "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"TestPass123\"\n}"
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "email", "value": "testuser@example.com", "type": "text" },
+            { "key": "password", "value": "TestPass123", "type": "text" }
+          ]
         },
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/user/login",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/user/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["user", "login"]
         }
       }
@@ -55,6 +90,13 @@
         "body": {
           "mode": "raw",
           "raw": "{\n  \"name\": \"John Doe\",\n  \"phone\": \"+91-9876543210\",\n  \"email\": \"john.doe@example.com\",\n  \"status\": \"hot\",\n  \"notes\": \"Interested in premium package\",\n  \"date\": \"2025-06-23\",\n  \"pin\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["leads"]
         }
       }
     },
@@ -66,9 +108,10 @@
           { "key": "Authorization", "value": "Bearer {{jwt}}" }
         ],
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads/by-employee/{{employeeId}}",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/leads/by-employee/{{employeeId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["leads", "by-employee", "{{employeeId}}"]
         }
       }
@@ -82,9 +125,10 @@
           { "key": "employee-id", "value": "{{employeeId}}" }
         ],
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/leads",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["leads"]
         }
       }
@@ -103,9 +147,10 @@
           "raw": "{\n  \"id\": \"{{leadId}}\",\n  \"field\": \"status\",\n  \"value\": \"warm\"\n}"
         },
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads/update",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/leads/update",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["leads", "update"]
         }
       }
@@ -119,9 +164,10 @@
           { "key": "employee-id", "value": "{{employeeId}}" }
         ],
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads/{{leadId}}",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/leads/{{leadId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["leads", "{{leadId}}"]
         }
       }
@@ -135,9 +181,10 @@
           { "key": "employee-id", "value": "{{employeeId}}" }
         ],
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads?status=hot",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/leads?status=hot",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["leads"],
           "query": [
             { "key": "status", "value": "hot" }
@@ -153,9 +200,10 @@
           { "key": "Authorization", "value": "Bearer {{jwt}}" }
         ],
         "url": {
-          "raw": "https://sturdy-acorn-69wg9xjxgqgrf9gq-3000.app.github.dev/leads/dashboard",
-          "protocol": "https",
-          "host": ["sturdy-acorn-69wg9xjxgqgrf9gq-3000", "app", "github", "dev"],
+          "raw": "http://localhost:3000/leads/dashboard",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
           "path": ["leads", "dashboard"]
         }
       }
