@@ -16,7 +16,7 @@ class UserModel {
     this.collection = db.collection('users');
   }
 
-  async createUser({ email, password, name }) {
+  async createUser({ email, password, name, role = 'user' }) {
     // Generate unique empId
     let empId;
     let exists = true;
@@ -25,7 +25,7 @@ class UserModel {
       exists = await this.collection.findOne({ empId });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { empId, email, password: hashedPassword, name, createdAt: new Date() };
+    const user = { empId, email, password: hashedPassword, name,role, createdAt: new Date() };
     const result = await this.collection.insertOne(user);
     return { ...user, _id: result.insertedId };
   }

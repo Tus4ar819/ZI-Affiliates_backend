@@ -15,7 +15,7 @@ class AdminModel {
     this.collection = db.collection('users');
   }
 
-  async createAdmin({ email, password, name }) {
+  async createAdmin({ email, password, name, role = 'admin' }) {
     // Generate unique empId
     let empId;
     let exists = true;
@@ -24,7 +24,7 @@ class AdminModel {
       exists = await this.collection.findOne({ empId });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const admin = { empId, email, password: hashedPassword, name, role: 'admin', createdAt: new Date() };
+    const admin = { empId, email, password: hashedPassword, name, role, createdAt: new Date() };
     const result = await this.collection.insertOne(admin);
     return { ...admin, _id: result.insertedId };
   }
