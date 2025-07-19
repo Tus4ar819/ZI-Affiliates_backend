@@ -7,12 +7,12 @@ class AdminModel {
     if (!db) {
       throw new Error('MongoDB connection not established');
     }
-    db.listCollections({ name: 'users' }).next((err, collinfo) => {
+    db.listCollections({ name: 'admin' }).next((err, collinfo) => {
       if (!collinfo) {
-        db.createCollection('users');
+        db.createCollection('admin');
       }
     });
-    this.collection = db.collection('users');
+    this.collection = db.collection('admin');
   }
 
   async createAdmin({ email, password, name, role = 'admin' }) {

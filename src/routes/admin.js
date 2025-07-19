@@ -1,4 +1,5 @@
 const AdminModel = require('../models/admin');
+const UserModel = require('../models/user');
 const bcrypt = require('bcryptjs');
 
 async function adminRoutes(fastify, opts) {
@@ -36,6 +37,7 @@ async function adminRoutes(fastify, opts) {
       role: admin.role
     });
   });
+  
 }
 
 module.exports = adminRoutes;
