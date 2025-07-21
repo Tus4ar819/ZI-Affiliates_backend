@@ -4,15 +4,7 @@ const LeadModel = require('../models/lead');
 async function leadRoutes(fastify, opts) {
   const db = fastify.mongo.db;
   const leads = new LeadModel(db);
-
-  // Get all leads by employeeId
-  fastify.get('/by-employee/:empId', { preHandler: [fastify.authenticate] }, async (request, reply) => {
-    const { empId } = request.params;
-    if (!empId) return reply.code(400).send({ error: 'empId param required' });
-    const leadsList = await leads.getLeadsByEmployeeId(empId);
-    reply.send(leadsList);
-  });
-
+  
   // Create Lead
   fastify.post('/', { preHandler: [fastify.authenticate], schema: {
     body: {
@@ -43,37 +35,65 @@ async function leadRoutes(fastify, opts) {
     const lead = await leads.createLead({ ...request.body, userId, employeeId });
     reply.code(201).send(lead);
   });
+  
+  // Get all leads by employeeId
+  fastify.get('/by-employee/:empId', { preHandler: [fastify.authenticate] }, async (request, reply) => {
+    const { empId } = request.params;
+    if (!empId) return reply.code(400).send({ error: 'empId param required' });
+    const leadsList = await leads.getLeadsByEmployeeId(empId);
+    reply.send(leadsList);
+  });
+
 
   // Update Lead (now POST, only updates the field specified in body)
-  fastify.post('/update', { preHandler: [fastify.authenticate] }, async (request, reply) => {
-    const { id, field, value } = request.body;
-    if (!id || !field || typeof value === 'undefined') {
-      return reply.code(400).send({ error: 'id, field, and value are required in body' });
-    }
-    const userId = request.user.userId;
-    // Get employeeId from header if provided
-    let employeeId = request.headers['employee-id'];
-    if (!employeeId) {
-      const db = fastify.mongo.db;
-      const users = db.collection('users');
-      const { ObjectId } = require('mongodb');
-      const user = await users.findOne({ _id: new ObjectId(userId) });
-      employeeId = user ? user.empId : undefined;
-    }
-    // Only update the specified field
-    const updateObj = { [field]: value };
-    const updated = await leads.updateLead(id, userId, { ...updateObj, employeeId }, employeeId);
-    if (updated && updated.error === 'not_found') {
-      return reply.code(404).send({ error: 'Lead not found (invalid leadId or _id)' });
-    }
-    if (updated && updated.error === 'ownership') {
-      return reply.code(403).send({ error: 'Lead exists but not owned by this employeeId or user' });
-    }
-    if (!updated) {
-      return reply.code(404).send({ error: 'Lead not found or not owned by user/employee' });
-    }
-    reply.send(updated);
-  });
+
+  // fastify.post(
+  //   '/update',
+  //   { preHandler: [fastify.authenticate] },
+  //   async (request, reply) => {
+  //     // Read id from header or body
+  //     const leadId = request.headers['lead-id'] || request.body.id;
+  //     if (!leadId) {
+  //       return reply
+  //         .code(400)
+  //         .send({ error: 'Lead ID is required (header or body)' });
+  //     }
+
+  //     // Remove id from update payload
+  //     const newData = { ...request.body };
+  //     delete newData.id;
+
+  //     const db = fastify.mongo.db;
+  //     const leadsDb = db.collection('leads');
+
+  //     // Check lead exists
+  //     const existing = await leadsDb.findOne({ _id: new ObjectId(leadId) });
+  //     if (!existing) {
+  //       return reply.code(404).send({ error: 'Lead not found' });
+  //     }
+
+  //     const { userId: authUserId, role } = request.user;
+  //     const isAdmin = role === 'admin';
+  //     const isOwner = existing.userId === authUserId;
+
+  //     if (!isAdmin && !isOwner) {
+  //       return reply
+  //         .code(403)
+  //         .send({ error: 'Not authorized to update this lead' });
+  //     }
+
+  //     // Replace entire lead document with new data (keeping _id and userId)
+  //     const toReplace = { ...newData, _id: new ObjectId(leadId), userId: existing.userId };
+  //     await leadsDb.replaceOne(
+  //       { _id: new ObjectId(leadId) },
+  //       toReplace
+  //     );
+
+  //     const updated = await leadsDb.findOne({ _id: new ObjectId(leadId) });
+  //     reply.send(updated);
+  //   }
+  // );
+
 
   // Delete Lead
   fastify.delete('/:id', { preHandler: [fastify.authenticate] }, async (request, reply) => {

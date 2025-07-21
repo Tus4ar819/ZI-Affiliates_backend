@@ -13,7 +13,10 @@ require('dotenv').config();
 
 fastify.register(cors, {
   origin: true, // allow any URL
-  methods: ["GET", "POST", "DELETE"]
+  methods: ["GET", "POST", "DELETE"],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, 
+
 });
 
 // Register formbody to support x-www-form-urlencoded
