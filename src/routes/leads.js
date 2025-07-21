@@ -46,7 +46,9 @@ async function leadRoutes(fastify, opts) {
   });
 
   // Update Lead (now POST, only updates the field specified in body)
-  fastify.post(
+  const { ObjectId } = require('mongodb');
+
+fastify.post(
   '/update',
   { preHandler: [fastify.authenticate] },
   async (request, reply) => {
@@ -78,18 +80,24 @@ async function leadRoutes(fastify, opts) {
         .send({ error: 'Not authorized to update this lead' });
     }
 
+    // Build the updated document
     const toReplace = {
-      ...newData,
-      _id: new ObjectId(leadId),
-      userId: existing.userId,
+      ...existing,             // Start with existing to preserve all fields
+      ...newData,              // Override with new data
+      _id: new ObjectId(leadId), // Ensure _id stays the same
+      userId: existing.userId,   // Keep original userId
+      leadId: existing.leadId,   // Keep original leadId
+      employeeId: existing.employeeId, // Keep original employeeId
+      updatedAt: new Date(),     // Update the updatedAt timestamp
     };
 
     await leadsDb.replaceOne({ _id: new ObjectId(leadId) }, toReplace);
-
     const updated = await leadsDb.findOne({ _id: new ObjectId(leadId) });
+
     reply.send(updated);
   }
 );
+
 
   // Delete Lead
   fastify.delete('/:id', { preHandler: [fastify.authenticate] }, async (request, reply) => {
