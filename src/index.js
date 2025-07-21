@@ -3,7 +3,8 @@ const fastify = require('fastify')({ logger: true });
 const cors = require('@fastify/cors');
 const formbody = require('@fastify/formbody');
 const userRoutes = require('./routes/user');
-const leadRoutes = require('./routes/lead');
+const leadRoutes = require('./routes/leads');
+const LeadModel = require('./models/leads');
 const dashboardRoutes = require('./routes/dashboard');
 const adminRoutes = require('./routes/admin');
 const jwt = require('@fastify/jwt');
@@ -13,10 +14,7 @@ require('dotenv').config();
 
 fastify.register(cors, {
   origin: true, // allow any URL
-  methods: ["GET", "POST", "DELETE"],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, 
-
+  methods: ["GET", "POST", "DELETE"]
 });
 
 // Register formbody to support x-www-form-urlencoded
@@ -39,11 +37,15 @@ fastify.decorate('authenticate', async function(request, reply) {
     reply.code(401).send({ error: 'Invalid or expired token' });
   }
 });
+fastify.after(() => {
+  const LeadModel = require('./models/leads');
+  fastify.decorate('leadModel', new LeadModel(fastify.mongo.db)); // ✅ db now safely available
+});
 
+fastify.register(adminRoutes, { prefix: '/admin' });
 fastify.register(userRoutes, { prefix: '/user' });
 fastify.register(leadRoutes, { prefix: '/leads' });
 fastify.register(dashboardRoutes);
-fastify.register(adminRoutes, { prefix: '/admin' });
 
 
 fastify.listen({ port: 3000, host: '0.0.0.0' }, err => {

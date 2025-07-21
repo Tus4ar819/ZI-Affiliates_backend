@@ -1,6 +1,6 @@
 const AdminModel = require('../models/admin');
 const UserModel = require('../models/user');
-const leads = require('../models/lead');
+const leads = require('../models/leads');
 const bcrypt = require('bcryptjs');
 
 async function adminRoutes(fastify, opts) {
@@ -56,26 +56,27 @@ async function adminRoutes(fastify, opts) {
   }
 );
 
-fastify.get(
-  '/all-status-leads',
+  // Get Admin by ID
+  fastify.get('/all-status-leads',
   { preHandler: [fastify.authenticate] },
   async (request, reply) => {
     const user = request.user;
-    
-    // 1. Enforce admin-only access
+
     if (user.role !== 'admin') {
       return reply.code(403).send({ error: 'Access denied' });
     }
 
-    // 2. Ensure status query is provided
     const { status } = request.query;
     if (!status) {
       return reply.code(400).send({ error: 'Status query required' });
     }
 
-    // 3. Fetch and respond
     try {
-      const leadsList = await leads.getLeadsByStatus(user.userId, status);
+      const leadsList = await fastify.mongo.db
+        .collection('leads')
+        .find({ status })
+        .toArray();
+
       reply.send(leadsList);
     } catch (err) {
       request.log.error(err);
@@ -84,9 +85,14 @@ fastify.get(
   }
 );
 
+
+
+
+
   // Update Admin (open, only if no admin exists)
 
-  // other routes...
-}
 
+  // other routes...
+
+}
 module.exports = adminRoutes;

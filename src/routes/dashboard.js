@@ -1,4 +1,4 @@
-const LeadModel = require('../models/lead');
+const LeadModel = require('../models/leads');
 
 async function dashboardRoutes(fastify, opts) {
   const db = fastify.mongo.db;
